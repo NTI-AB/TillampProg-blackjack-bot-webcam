@@ -9,8 +9,12 @@ def blackjack_advice(player_hand, dealer_card):
         dealer_card (int): Value of the dealer's visible card (e.g., 6).
     
     Returns:
-        str: Advice ("Hit", "Stand", "Double", "Split").
+        str: Advice ("Hit", "Stand", "Double", "Split", "Blackjack!").
     """
+    
+    # Check for blackjack
+    if len(player_hand) == 2 and sum(player_hand) == 21:
+        return "Blackjack!"
     
     # Calculate the sum of the player's hand
     hand_sum = sum(player_hand)
@@ -18,9 +22,11 @@ def blackjack_advice(player_hand, dealer_card):
     # Check if the hand is soft (contains an Ace counted as 11)
     is_soft = 11 in player_hand and hand_sum <= 21
     
-    # Adjust for soft hands
-    if is_soft:
-        hand_sum -= 10  # Treat Ace as 1 temporarily
+    # If the hand total exceeds 21 and there's an Ace, convert Ace from 11 to 1
+    if hand_sum > 21 and 11 in player_hand:
+        player_hand = [1 if card == 11 else card for card in player_hand]
+        hand_sum = sum(player_hand)
+        is_soft = False
     
     # Basic strategy rules
     if len(player_hand) == 2 and player_hand[0] == player_hand[1]:
